@@ -11,7 +11,6 @@ public class Main {
     //TODO: Ideas: Player can change into different animals with different abilities. Animals include penguin, phoenix, wolf
     static int moveCounter = 0;
     public static void main(String[] args) {
-        //asasdasd
         int x,y;    //coordinates of player
         String choice;      //The choice a player makes
         Scanner scan = new Scanner(System.in);
@@ -47,7 +46,7 @@ public class Main {
 
                     Skeleton[] skeleton = new Skeleton[2];//1-3 skeletons
                     for (int i=0; i<skeleton.length; i++){
-                        skeleton[i] = new Skeleton("skeleton" + (i+1));
+                        skeleton[i] = new Skeleton("Skeleton" + (i+1));
                     }
                     Fight random = new Fight(mainCharacter, skeleton);
                 }

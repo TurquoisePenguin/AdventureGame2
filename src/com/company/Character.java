@@ -18,15 +18,15 @@ public class Character implements Comparable<Character> {
 
     //characteristics
     String name="";
-    String[] actions;
+    BasicActions[] actions;
 
-    double getMaxHP(){return this.maxHP;};
-    double getCurHP(){return this.curHP;};
-    double getStrength(){return this.strength;};
-    double getDefense(){return this.defense;};
+    double getMaxHP(){return this.maxHP;}
+    double getCurHP(){return this.curHP;}
+    double getStrength(){return this.strength;}
+    double getDefense(){return this.defense;}
     double getSpeed(){return this.speed;}
-    String getName(){return this.name;};
-    public String[] getActions(){return this.actions;};
+    String getName(){return this.name;}
+    public BasicActions[] getActions(){return this.actions;}
 
     //returns an int based on speed, higher number goes first
     public int getTurnTime() {
@@ -39,16 +39,15 @@ public class Character implements Comparable<Character> {
     }
 
     //will perform the selected action
-    public void performAction(String action)
+    public void performAction(BasicActions action)
     {
-
+        System.out.println("This must be implemented in appropriate class.");
     }
 
     //if no arg is supplied, selects a random action
     public void performAction()
     {
-        int rand = new Random().nextInt(this.actions.length);
-        performAction(this.actions[rand]);
+        System.out.println("This must be implemented in appropriate class.");
     }
 
 

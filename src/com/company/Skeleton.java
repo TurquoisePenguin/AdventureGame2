@@ -5,7 +5,7 @@ public class Skeleton extends EnemyClass{
     Random rand = new Random();
     //random.nextInt(max - min) + min;
     int level=1;
-    double maxHP= rand.nextInt(3 - 2) + 2;;
+    double maxHP= rand.nextInt(3 - 2) + 2;
     double curHP= this.maxHP;
     double maxMP=2;
     double curMP= this.maxMP;
@@ -16,7 +16,7 @@ public class Skeleton extends EnemyClass{
     double speed=3;
     int turnTime=1;
     String name = "Skeleton";
-    String[] actions = {"Attack"};
+    BasicActions[] actions = {BasicActions.ATTACK};
 
     public int getLevel(){
         return level;
@@ -45,7 +45,7 @@ public class Skeleton extends EnemyClass{
         return this.strength;
     }
     public double getDefense() { return this.defense; }
-    public String[] getActions() {
+    public BasicActions[] getActions() {
         return actions;
     }
 
@@ -57,6 +57,20 @@ public class Skeleton extends EnemyClass{
     public boolean attack(final Character target){
         //TODO
         return true;
+    }
+
+    //will perform the selected action
+    @Override
+    public void performAction(BasicActions action)
+    {
+        System.out.println(this.getName() + " action: " + action.toString());
+    }
+
+    //if no arg is supplied, selects a random action
+    @Override
+    public void performAction()
+    {
+        System.out.println(this.getName() + " performAction()");
     }
 
 

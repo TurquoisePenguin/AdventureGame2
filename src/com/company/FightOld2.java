@@ -46,7 +46,7 @@ public class FightOld2 {
 
         //display main choices
         int count = 1;  //used to format options
-        for (String actions : mainCharacter.getActions())
+        for (BasicActions actions : mainCharacter.getActions())
         {
             System.out.print(actions);
             if (count % 2 == 0)

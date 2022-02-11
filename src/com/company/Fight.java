@@ -1,14 +1,11 @@
 package com.company;
 
-import java.util.Comparator;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.Arrays;
+import java.util.*;
 
 public class Fight {
     PlayerCharacter mainCharacter;  //taken through constructor //Player Character that is fighting
     EnemyClass[] enemies;   //taken through constructor, expected to change as needed   //enemy or enemies that are fighting PC
-    static String[] mainActions = {"Attack", "Skills", "Item", "Run"}; //First level options for fighting, may change as needed?
+    //static String[] mainActions = {"Attack", "Skills", "Item", "Run"}; //First level options for fighting, may change as needed?  //TODO:Deprecated
 
     public Fight(PlayerCharacter mainCharacter, EnemyClass[] enemies) {
         this.mainCharacter = mainCharacter;
@@ -21,7 +18,8 @@ public class Fight {
         boolean fighting = true;
         while (fighting){
 
-            String playerAction = "";
+            BasicActions playerAction = null;
+            int target;
 
             //print characters and status
             System.out.println(mainCharacter.getName());
@@ -29,9 +27,26 @@ public class Fight {
 
             printEnemies(enemies);
 
-            //choose action
-            playerAction = selectAction(mainCharacter.getActions());
-            System.out.println(playerAction);
+            //loop until read for combat
+            boolean actionSelected = false;
+            while (!actionSelected){
+                //choose action
+                playerAction = selectAction(mainCharacter.getActionsEnum());
+                System.out.println(playerAction);   //TODO: for debugging
+
+                //if selected action has a secondary menu, open it
+                if (playerAction.targets.equalsIgnoreCase("menu")){
+                    playerAction = selectAction(mainCharacter.getMenu(playerAction));
+                }
+
+                //get target
+                //create list of possible targets. Attack: Enemy1, Enemy2, etc. Item: Self, Party, any 1 enemy? Run: skip
+                target = getTarget(playerAction, enemies);
+                System.out.println(enemies[target].getName());  //TODO: for debugging, assumes enemy target
+                actionSelected = true;
+            }
+
+
 
             //old if-then to perform appropriate action selected
             /*if (playerAction.equalsIgnoreCase("Attack"))
@@ -66,21 +81,23 @@ public class Fight {
             for (Character actor:turnOrder) {
                 //TODO: Do I check if dead here or inside class?
                 if (actor instanceof PlayerCharacter) {
-                    mainCharacter.basicAction(playerAction);
+                    System.out.println("Got here.");
+                    mainCharacter.performAction(playerAction);
                 }
                 else{
                     actor.performAction();
                 }
             }
 
-
-            fighting=false;
+            if(false){  //TODO: Check HP values and finish fight
+                fighting=false;
+            }
         }
         return true;
     }
 
     //Format and print enemies
-    private void printEnemies(EnemyClass[] enemies)
+    private static void printEnemies(EnemyClass[] enemies)
     {
         String enemyNames = "";
         String enemyHPs = "";
@@ -106,7 +123,7 @@ public class Fight {
     //Prints available actions and waits for user input
     //When user makes appropriate choice, returns string of action chosen
     //TODO: Use enums and try-check
-    private String selectAction(String[] actions){
+    private BasicActions selectAction(ArrayList<BasicActions> actions){
         Scanner scan = new Scanner(System.in);
         boolean selected = false;
         String choice = "";
@@ -115,7 +132,7 @@ public class Fight {
         while (!selected){
 
             //display actions
-            System.out.println(Arrays.toString(actions));
+            System.out.println(actions.toString());
 
             //if you want to format, use this
             /*int count = 1;  //used to format options
@@ -135,15 +152,15 @@ public class Fight {
 
             if (isInteger(choice)){  //if choice is an integer
                 int intChoice = Integer.parseInt(choice);   //convert choice to int
-                if (intChoice>0 && intChoice<=actions.length)   //choice is between 1 and # of choices eg 1-4
+                if (intChoice>0 && intChoice<=actions.size())   //choice is between 1 and # of choices eg 1-4
                 {
-                    choice = actions[intChoice-1];    //returns choice, eg 1=Attack, 2=Skills, etc
+                    choice = actions.get(intChoice-1).toString();    //returns choice, eg 1=Attack, 2=Skills, etc
                     selected = true;
                 }
             }
             else {  //check if choice is in actions
-                for (String action : actions) {
-                    if (choice.equalsIgnoreCase(action)) {
+                for (BasicActions action : actions) {
+                    if (choice.equalsIgnoreCase(action.toString())) {
                         selected = true;
                     }
                 }
@@ -152,7 +169,60 @@ public class Fight {
                 System.out.println("Please select an appropriate action");
             }
         }
-        return choice;
+        return BasicActions.valueOf(choice.toUpperCase());
+    }
+
+    //given a character's <action>, presents selectable targets (if applicable) abd returns target (if applicable)
+    public int getTarget(BasicActions action, EnemyClass[] enemies){
+        Scanner scan = new Scanner(System.in);
+        String choice = "";
+        int target = -2;    //returns array index if applicable, -1 for self, -2 is error
+
+        switch(action.targets) {
+            case "single enemy":
+                boolean selected = false;
+
+                //loop to take selection
+                //TODO: Important. Check for HP and exclude dead choices
+                while (!selected){
+                    target = -1;    //target will equal index of enemy chosen by end of loop
+                    System.out.println("Who would you like to " + action + "?");
+                    choice = scan.nextLine();
+                    for (EnemyClass enemy : enemies){
+                        target++;
+                        if (choice.equalsIgnoreCase(enemy.getName())){
+                            selected = true;
+                            break;
+                        }
+                    }
+                    if (!selected){
+                        Fight.printEnemies(enemies);
+                        System.out.println("Please make an appropriate choice.");
+                    }
+                }
+                break;
+            case "all enemies":
+                //code
+                break;
+            case "menu":
+                //code
+                break;
+            case "self":
+                //code
+                break;
+            case "single PC":
+                //code
+                break;
+            case "full party":
+                //code
+                break;
+            case "skip":
+            case "null":
+            default:
+                target = -2;
+                break;
+        }
+        return target;
     }
 
     //Returns an array of Character[] containing PC and enemies in appropriate turn order
@@ -169,6 +239,7 @@ public class Fight {
         Arrays.sort(actors, Comparator.comparing(Character::getTurnTime));*/
         return actors;
     }
+
 
 
     //Method to select target of skills/attacks.

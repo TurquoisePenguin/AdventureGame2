@@ -1,4 +1,8 @@
 package com.company;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
 
 public class PlayerCharacter extends Character{
     //stats?
@@ -13,8 +17,10 @@ public class PlayerCharacter extends Character{
     private double speed=100;
     private int turnTime=1;
     private int level=1;
-    private String[] actions = {"Attack", "Special", "Item", "Run"};
-    private Skill[] skills = {new Skill("Fireball", 10, 0)};
+    private BasicActions[] actions = {BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN};
+    private ArrayList<BasicActions> actionsEnum = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
+    private ArrayList<BasicActions> skills = new ArrayList<>(List.of(BasicActions.FIREBALL, BasicActions.LIGHTNING));
+    private ArrayList<BasicActions> items = new ArrayList<>(); //TODO: fill as needed, create modifiers
 
     //characteristics?
     private String name="";
@@ -115,17 +121,50 @@ public class PlayerCharacter extends Character{
     public int getLevel() {
         return level;
     }
-    public String[] getActions() {return actions;}
+    public BasicActions[] getActions() {return actions;}
+
+    public ArrayList<BasicActions> getActionsEnum() {return actionsEnum;}
+    public ArrayList<BasicActions> getItems() {return items;}
+
     //TODO: Do I need this or Skill[]?
-    public String[] getSkills(){
-        String temp="";
-        for (Skill skills : this.skills) {
-            temp += skills.getName();
+    public ArrayList<BasicActions> getSkills(){return skills;}
+
+    //takes an action with a menu, like Item, and returns the menu as an array
+    public ArrayList<BasicActions> getMenu(BasicActions action){
+        ArrayList<BasicActions> menu;
+        switch (action){
+            case SPECIAL:
+                menu = getSkills();
+                break;
+            /*case ITEM:
+                //menu = getItems(); //TODO: Problem: this wants to be a list? Maybe array of actions with #owned. Ex: [Potions(2), Ethers(1), Elixirs(0)]
+                break;*/
+            default:    //error
+                menu = null;
         }
-        String[] skills = temp.split(" ");
-        return skills;
+        return menu;
     }
 
+    //will perform the selected action
+    public void performAction(BasicActions action)
+    {
+        switch(action) {
+            case ATTACK:
+                //get target
+
+                break;
+            case SPECIAL:
+
+                break;
+        }
+        System.out.println(this.getName() + " action: " + action);
+    }
+
+    //if no arg is supplied, selects a random action
+    public void performAction()
+    {
+        System.out.println(this.getName() + " performAction()");
+    }
 
     public void setTurnTime(int turnTime) {
         this.turnTime = turnTime;
@@ -135,11 +174,12 @@ public class PlayerCharacter extends Character{
         this.level = level;
     }
 
-    public void setActions(String[] actions) {
+    //TODO: Convert to enum
+    /*public void setActions(String[] actions) {
         this.actions = actions;
     }
 
     public void setSkills(Skill[] skills) {
         this.skills = skills;
-    }
+    }*/
 }
