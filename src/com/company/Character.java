@@ -5,16 +5,16 @@ import java.util.Random;
 
 public class Character implements Comparable<Character> {
     //stats
-    double maxHP=10;
-    double curHP=10;
-    double maxMP=10;
-    double curMP=10;
-    double strength=10;
-    double intelligence=10;
-    double defense=10;
-    double resistance=10;
-    double speed=10;
-    int turnTime=1;
+    double maxHP;
+    double curHP;
+    double maxMP;
+    double curMP;
+    double strength;
+    double intelligence;
+    double defense;
+    double resistance;
+    double speed;
+    int turnTime;
 
     //characteristics
     String name="";
@@ -27,6 +27,15 @@ public class Character implements Comparable<Character> {
     double getSpeed(){return this.speed;}
     String getName(){return this.name;}
     public BasicActions[] getActions(){return this.actions;}
+
+    //remove <amount> of HP, returns 1 if still alive, 0 if dead
+    public int removeHP(double amount) {   //1 = alive, 0 = dead
+        curHP = curHP - amount;
+        if (curHP <= 0)
+            return 0;       //dead
+        else
+            return 1;       //alive
+    }
 
     //returns an int based on speed, higher number goes first
     public int getTurnTime() {

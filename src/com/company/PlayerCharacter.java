@@ -123,6 +123,16 @@ public class PlayerCharacter extends Character{
     }
     public BasicActions[] getActions() {return actions;}
 
+    @Override
+    //remove <amount> of HP, returns 1 if still alive, 0 if dead
+    public int removeHP(double amount) {   //1 = alive, 0 = dead
+        curHP = curHP - amount;
+        if (curHP <= 0)
+            return 0;       //dead
+        else
+            return 1;       //alive
+    }
+
     public ArrayList<BasicActions> getActionsEnum() {return actionsEnum;}
     public ArrayList<BasicActions> getItems() {return items;}
 
@@ -146,12 +156,13 @@ public class PlayerCharacter extends Character{
     }
 
     //will perform the selected action
-    public void performAction(BasicActions action)
+    public void performAction(BasicActions action, Character[] target)
     {
         switch(action) {
             case ATTACK:
                 //get target
-
+                target[0].removeHP(action.BP);
+                System.out.println(target[0].getName() + " curHP: " + target[0].curHP);
                 break;
             case SPECIAL:
 

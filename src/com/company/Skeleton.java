@@ -18,6 +18,16 @@ public class Skeleton extends EnemyClass{
     String name = "Skeleton";
     BasicActions[] actions = {BasicActions.ATTACK};
 
+    @Override
+    //remove <amount> of HP, returns 1 if still alive, 0 if dead
+    public int removeHP(double amount) {   //1 = alive, 0 = dead
+        curHP = curHP - amount;
+        if (curHP <= 0)
+            return 0;       //dead
+        else
+            return 1;       //alive
+    }
+
     public int getLevel(){
         return level;
     }

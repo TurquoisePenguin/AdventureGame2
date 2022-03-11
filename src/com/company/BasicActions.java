@@ -1,7 +1,7 @@
 package com.company;
 
 public enum BasicActions {
-    ATTACK("single enemy"),
+    ATTACK("single enemy", 1, 0),
     SPECIAL("menu"),
     ITEM("menu"),
     RUN("skip"),

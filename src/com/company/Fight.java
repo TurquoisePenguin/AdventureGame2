@@ -18,8 +18,8 @@ public class Fight {
         boolean fighting = true;
         while (fighting){
 
-            BasicActions playerAction = null;
-            int target;
+            BasicActions playerAction;
+            Character[] target;
 
             //print characters and status
             System.out.println(mainCharacter.getName());
@@ -29,7 +29,7 @@ public class Fight {
 
             //loop until read for combat
             boolean actionSelected = false;
-            while (!actionSelected){
+            do {
                 //choose action
                 playerAction = selectAction(mainCharacter.getActionsEnum());
                 System.out.println(playerAction);   //TODO: for debugging
@@ -42,9 +42,9 @@ public class Fight {
                 //get target
                 //create list of possible targets. Attack: Enemy1, Enemy2, etc. Item: Self, Party, any 1 enemy? Run: skip
                 target = getTarget(playerAction, enemies);
-                System.out.println(enemies[target].getName());  //TODO: for debugging, assumes enemy target
+                System.out.println(target[0].getName());  //TODO: for debugging, assumes enemy target
                 actionSelected = true;
-            }
+            } while (!actionSelected);
 
 
 
@@ -82,7 +82,7 @@ public class Fight {
                 //TODO: Do I check if dead here or inside class?
                 if (actor instanceof PlayerCharacter) {
                     System.out.println("Got here.");
-                    mainCharacter.performAction(playerAction);
+                    mainCharacter.performAction(playerAction, target);
                 }
                 else{
                     actor.performAction();
@@ -173,7 +173,7 @@ public class Fight {
     }
 
     //given a character's <action>, presents selectable targets (if applicable) abd returns target (if applicable)
-    public int getTarget(BasicActions action, EnemyClass[] enemies){
+    public Character[] getTarget(BasicActions action, EnemyClass[] enemies){
         Scanner scan = new Scanner(System.in);
         String choice = "";
         int target = -2;    //returns array index if applicable, -1 for self, -2 is error
@@ -188,11 +188,22 @@ public class Fight {
                     target = -1;    //target will equal index of enemy chosen by end of loop
                     System.out.println("Who would you like to " + action + "?");
                     choice = scan.nextLine();
-                    for (EnemyClass enemy : enemies){
-                        target++;
-                        if (choice.equalsIgnoreCase(enemy.getName())){
-                            selected = true;
-                            break;
+                    if (isInteger(choice)){  //if choice is an integer
+                        int intChoice = Integer.parseInt(choice);   //convert choice to int
+                        if (intChoice>0 && intChoice<=enemies.length)   //choice is between 1 and # of choices eg 1-4
+                        {
+                            EnemyClass[] returnTarget = new EnemyClass[1];
+                            returnTarget[0] = enemies[intChoice-1];
+                            return returnTarget;
+                        }
+                    }
+                    else{
+                        for (EnemyClass enemy : enemies){
+                            target++;
+                            if (choice.equalsIgnoreCase(enemy.getName())){
+                                selected = true;
+                                break;
+                            }
                         }
                     }
                     if (!selected){
@@ -202,8 +213,7 @@ public class Fight {
                 }
                 break;
             case "all enemies":
-                //code
-                break;
+                return enemies;
             case "menu":
                 //code
                 break;
@@ -222,7 +232,9 @@ public class Fight {
                 target = -2;
                 break;
         }
-        return target;
+        EnemyClass[] returnTarget = new EnemyClass[1];
+        returnTarget[0] = enemies[target];
+        return returnTarget;
     }
 
     //Returns an array of Character[] containing PC and enemies in appropriate turn order
@@ -241,7 +253,7 @@ public class Fight {
     }
 
 
-
+    //TODO: Deprecated
     //Method to select target of skills/attacks.
     //Returns in of array of targets
     //TODO: unfinished
