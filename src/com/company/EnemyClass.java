@@ -1,7 +1,7 @@
 package com.company;
 import java.util.*;
 
-public class EnemyClass extends Character {
+public interface EnemyClass extends Character {
     //stats
 
     //characteristics

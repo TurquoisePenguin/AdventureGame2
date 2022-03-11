@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
-public class PlayerCharacter extends Character{
+public class PlayerCharacter implements Character{
     //stats?
     private double maxHP=10;
     private double curHP=10;
@@ -41,21 +41,6 @@ public class PlayerCharacter extends Character{
     //constructor with just name
     public PlayerCharacter(String name) {
         this.setName(name);
-    }
-
-    //Performs one of the Player's basic actions: Attack, Special, Item, Run
-    public void basicAction(String action){
-        switch(action.toLowerCase())
-        {
-            case "attack":
-                //get target
-
-                break;
-            case "special":
-
-                break;
-
-        }
     }
 
     public double getMaxHP() {
@@ -123,7 +108,6 @@ public class PlayerCharacter extends Character{
     }
     public BasicActions[] getActions() {return actions;}
 
-    @Override
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public int removeHP(double amount) {   //1 = alive, 0 = dead
         curHP = curHP - amount;
@@ -131,6 +115,15 @@ public class PlayerCharacter extends Character{
             return 0;       //dead
         else
             return 1;       //alive
+    }
+
+    public int getTurnTime() {
+        //sets turn time from speed - speed*2
+        //TODO:CHECK AND FINISH!!!
+        int range = (int)(2*this.getSpeed() - this.getSpeed())+1;
+        this.turnTime = (int) (Math.random() * range + this.getSpeed());
+        //System.out.println(this.getName() + " Turn time: " + this.turnTime);  //debugging
+        return turnTime;
     }
 
     public ArrayList<BasicActions> getActionsEnum() {return actionsEnum;}
@@ -155,20 +148,25 @@ public class PlayerCharacter extends Character{
         return menu;
     }
 
-    //will perform the selected action
+    //will perform the selected action on selected target
     public void performAction(BasicActions action, Character[] target)
     {
         switch(action) {
             case ATTACK:
                 //get target
                 target[0].removeHP(action.BP);
-                System.out.println(target[0].getName() + " curHP: " + target[0].curHP);
+                System.out.println(target[0].getName() + " curHP: " + target[0].getCurHP());
                 break;
             case SPECIAL:
 
                 break;
         }
         System.out.println(this.getName() + " action: " + action);
+    }
+
+    //for actions with no specified target. Maybe Run
+    public void performAction(BasicActions action){
+        //TODO
     }
 
     //if no arg is supplied, selects a random action
@@ -193,4 +191,12 @@ public class PlayerCharacter extends Character{
     public void setSkills(Skill[] skills) {
         this.skills = skills;
     }*/
+
+    public String toString(){
+        return this.getName();
+    }
+
+    public int compareTo(Character o){
+        return o.getTurnTime() - this.getTurnTime();
+    }
 }

@@ -81,11 +81,12 @@ public class Fight {
             for (Character actor:turnOrder) {
                 //TODO: Do I check if dead here or inside class?
                 if (actor instanceof PlayerCharacter) {
-                    System.out.println("Got here.");
-                    mainCharacter.performAction(playerAction, target);
+                    if (mainCharacter.getCurHP() > 0)   //dead check
+                        mainCharacter.performAction(playerAction, target);
                 }
                 else{
-                    actor.performAction();
+                    if (actor.getCurHP() > 0)   //dead check
+                        actor.performAction();
                 }
             }
 

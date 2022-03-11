@@ -1,7 +1,7 @@
 package com.company;
 import java.util.*;
 
-public class Skeleton extends EnemyClass{
+public class Skeleton implements EnemyClass{
     Random rand = new Random();
     //random.nextInt(max - min) + min;
     int level=1;
@@ -18,7 +18,6 @@ public class Skeleton extends EnemyClass{
     String name = "Skeleton";
     BasicActions[] actions = {BasicActions.ATTACK};
 
-    @Override
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public int removeHP(double amount) {   //1 = alive, 0 = dead
         curHP = curHP - amount;
@@ -55,6 +54,7 @@ public class Skeleton extends EnemyClass{
         return this.strength;
     }
     public double getDefense() { return this.defense; }
+    public double getSpeed() { return speed; }
     public BasicActions[] getActions() {
         return actions;
     }
@@ -94,7 +94,14 @@ public class Skeleton extends EnemyClass{
     public String getName() {
         return name;
     }
-
+    public int getTurnTime() {
+        //sets turn time from speed - speed*2
+        //TODO:CHECK AND FINISH!!!
+        int range = (int)(2*this.getSpeed() - this.getSpeed())+1;
+        this.turnTime = (int) (Math.random() * range + this.getSpeed());
+        //System.out.println(this.getName() + " Turn time: " + this.turnTime);  //debugging
+        return turnTime;
+    }
 
 
     //constructor
@@ -103,5 +110,14 @@ public class Skeleton extends EnemyClass{
 
     public Skeleton(String name) {
         this.name = name;
+    }
+
+    //comparable
+    public String toString(){
+        return this.getName();
+    }
+
+    public int compareTo(Character o){
+        return o.getTurnTime() - this.getTurnTime();
     }
 }
