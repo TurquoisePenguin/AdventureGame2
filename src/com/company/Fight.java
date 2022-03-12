@@ -4,10 +4,10 @@ import java.util.*;
 
 public class Fight {
     PlayerCharacter mainCharacter;  //taken through constructor //Player Character that is fighting
-    EnemyClass[] enemies;   //taken through constructor, expected to change as needed   //enemy or enemies that are fighting PC
+    ArrayList<Character> enemies;   //taken through constructor, expected to change as needed   //enemy or enemies that are fighting PC
     //static String[] mainActions = {"Attack", "Skills", "Item", "Run"}; //First level options for fighting, may change as needed?  //TODO:Deprecated
 
-    public Fight(PlayerCharacter mainCharacter, EnemyClass[] enemies) {
+    public Fight(PlayerCharacter mainCharacter, ArrayList<Character> enemies) {
         this.mainCharacter = mainCharacter;
         this.enemies = enemies;
         this.fighting();
@@ -16,10 +16,11 @@ public class Fight {
     //returns true if still alive
     public boolean fighting(){
         boolean fighting = true;
+        BasicActions playerAction;
         while (fighting){
 
-            BasicActions playerAction;
-            Character[] target;
+
+            ArrayList<Character> target;
 
             //print characters and status
             System.out.println(mainCharacter.getName());
@@ -27,24 +28,19 @@ public class Fight {
 
             printEnemies(enemies);
 
-            //loop until read for combat
-            boolean actionSelected = false;
-            do {
-                //choose action
-                playerAction = selectAction(mainCharacter.getActions());
-                System.out.println(playerAction);   //TODO: for debugging
+            //choose action
+            playerAction = selectAction(mainCharacter.getActions());
+            System.out.println(playerAction);   //TODO: for debugging
 
-                //if selected action has a secondary menu, open it
-                if (playerAction.targets.equalsIgnoreCase("menu")){
-                    playerAction = selectAction(mainCharacter.getMenu(playerAction));
-                }
+            //if selected action has a secondary menu, open it
+            if (playerAction.targets.equalsIgnoreCase("menu")){
+                playerAction = selectAction(mainCharacter.getMenu(playerAction));
+            }
 
-                //get target
-                //create list of possible targets. Attack: Enemy1, Enemy2, etc. Item: Self, Party, any 1 enemy? Run: skip
-                target = getTarget(playerAction, enemies);
-                System.out.println(target[0].getName());  //TODO: for debugging, assumes enemy target
-                actionSelected = true;
-            } while (!actionSelected);
+            //get target
+            //create list of possible targets. Attack: Enemy1, Enemy2, etc. Item: Self, Party, any 1 enemy? Run: skip
+            target = getTarget(playerAction, enemies);
+            System.out.println(target.get(0).getName());  //TODO: for debugging, assumes enemy target
 
 
 
@@ -75,7 +71,7 @@ public class Fight {
             }*/
 
             //determine turn order
-            Character[] turnOrder = getTurnOrder(enemies);
+            ArrayList<Character> turnOrder = getTurnOrder(enemies);
 
             //perform actions in order
             for (Character actor:turnOrder) {
@@ -83,6 +79,7 @@ public class Fight {
                 if (actor instanceof PlayerCharacter) {
                     if (mainCharacter.getCurHP() > 0)   //dead check
                         mainCharacter.performAction(playerAction, target);
+
                 }
                 else{
                     if (actor.getCurHP() > 0)   //dead check
@@ -90,7 +87,16 @@ public class Fight {
                 }
             }
 
-            if(false){  //TODO: Check HP values and finish fight
+            int deadCount=0;  //counts the number of dead enemies, if all dead, finish fight
+            for (Character enemy : enemies) {
+                if (enemy.getCurHP() == 0)
+                    deadCount++;
+            }
+            if(deadCount == enemies.size()){  //TODO: Check HP values and finish fight
+                //TODO: Distribute exp
+                for (Character enemy : enemies) {
+                    mainCharacter.addExp(enemy.getExp());
+                }
                 fighting=false;
             }
         }
@@ -98,22 +104,22 @@ public class Fight {
     }
 
     //Format and print enemies
-    private static void printEnemies(EnemyClass[] enemies)
+    private static void printEnemies(ArrayList<Character> enemies)
     {
         String enemyNames = "";
         String enemyHPs = "";
-        for (int i=0; i<enemies.length; i++)    //DONE: Clean up print format
+        for (int i=0; i<enemies.size(); i++)    //DONE: Clean up print format
         {
-            if (enemies[i].getCurHP()>0)       //make sure enemy isn't dead    //BROKEN
+            if (enemies.get(i).getCurHP()>0)       //make sure enemy isn't dead    //BROKEN
             {
-                if ((i+1)<enemies.length)   //before the last enemy, tab
+                if ((i+1)<enemies.size())   //before the last enemy, tab
                 {
-                    enemyNames += enemies[i].getName() +"\t\t";
-                    enemyHPs += "HP: " + enemies[i].getCurHP() + "/ " + enemies[i].getMaxHP() + "\t";
+                    enemyNames += enemies.get(i).getName() +"\t\t";
+                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + "/ " + enemies.get(i).getMaxHP() + "\t";
                 } else        //no tab
                 {
-                    enemyNames += enemies[i].getName();
-                    enemyHPs += "HP: " + enemies[i].getCurHP() + "/ " + enemies[i].getMaxHP() + "\n";
+                    enemyNames += enemies.get(i).getName();
+                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + "/ " + enemies.get(i).getMaxHP() + "\n";
                 }
             }
         }
@@ -174,32 +180,33 @@ public class Fight {
     }
 
     //given a character's <action>, presents selectable targets (if applicable) abd returns target (if applicable)
-    public Character[] getTarget(BasicActions action, EnemyClass[] enemies){
+    public ArrayList<Character> getTarget(BasicActions action, ArrayList<Character> enemies){
         Scanner scan = new Scanner(System.in);
         String choice = "";
         int target = -2;    //returns array index if applicable, -1 for self, -2 is error
 
         switch(action.targets) {
+            //select enemy
             case "single enemy":
                 boolean selected = false;
 
                 //loop to take selection
                 //TODO: Important. Check for HP and exclude dead choices
                 while (!selected){
-                    target = -1;    //target will equal index of enemy chosen by end of loop
                     System.out.println("Who would you like to " + action + "?");
                     choice = scan.nextLine();
                     if (isInteger(choice)){  //if choice is an integer
                         int intChoice = Integer.parseInt(choice);   //convert choice to int
-                        if (intChoice>0 && intChoice<=enemies.length)   //choice is between 1 and # of choices eg 1-4
+                        if (intChoice>0 && intChoice<=enemies.size())   //choice is between 1 and # of choices eg 1-4
                         {
-                            EnemyClass[] returnTarget = new EnemyClass[1];
-                            returnTarget[0] = enemies[intChoice-1];
+                            ArrayList<Character> returnTarget = new ArrayList<>();
+                            returnTarget.add(enemies.get(intChoice-1));
                             return returnTarget;
                         }
                     }
                     else{
-                        for (EnemyClass enemy : enemies){
+                        target = -1;    //target will equal index of enemy chosen by end of loop
+                        for (Character enemy : enemies){
                             target++;
                             if (choice.equalsIgnoreCase(enemy.getName())){
                                 selected = true;
@@ -213,6 +220,7 @@ public class Fight {
                     }
                 }
                 break;
+            //return all enemies
             case "all enemies":
                 return enemies;
             case "menu":
@@ -233,21 +241,20 @@ public class Fight {
                 target = -2;
                 break;
         }
-        EnemyClass[] returnTarget = new EnemyClass[1];
-        returnTarget[0] = enemies[target];
+        ArrayList<Character> returnTarget = new ArrayList<>();
+        returnTarget.add(enemies.get(target));
         return returnTarget;
     }
 
-    //Returns an array of Character[] containing PC and enemies in appropriate turn order
-    //TODO: turn into a queue/linkedlist
-    private Character[] getTurnOrder(Character[] enemies)
+    //Returns an array of ArrayList<Character> containing PC and enemies in appropriate turn order
+    private ArrayList<Character> getTurnOrder(ArrayList<Character> enemies)
     {
-        Character[] actors = new Character[enemies.length + 1];
-        for (int i = 0; i < enemies.length; ++i) {
-            actors[i] = enemies[i];
+        ArrayList<Character> actors = new ArrayList<>();
+        for (int i = 0; i < enemies.size(); ++i) {
+            actors.add(enemies.get(i));
         }
-        actors[actors.length-1] = mainCharacter;
-        Arrays.sort(actors);
+        actors.add(mainCharacter);
+        Collections.sort(actors);
         /*Comparator.comparing(Character::getTurnTime).thenComparing(Character::getName);
         Arrays.sort(actors, Comparator.comparing(Character::getTurnTime));*/
         return actors;
@@ -258,7 +265,7 @@ public class Fight {
     //Method to select target of skills/attacks.
     //Returns in of array of targets
     //TODO: unfinished
-    private int selectTarget(EnemyClass[] enemies)
+    private int selectTarget(ArrayList<Character> enemies)
     {
         Scanner scan = new Scanner(System.in);
         String choice = ""; //temp choice variable
@@ -286,12 +293,12 @@ public class Fight {
     }
 
     //returns number of living/active enemies
-    private static int getActiveEnemies(EnemyClass[] enemies)
+    private static int getActiveEnemies(ArrayList<EnemyClass> enemies)
     {
         int count = 0;   //counts the number of enemies alive
-        for (int i=0; i<enemies.length; i++)
+        for (int i=0; i<enemies.size(); i++)
         {
-            if (enemies[i].getCurHP()>0)
+            if (enemies.get(i).getCurHP()>0)
             {
                 count++;
             }

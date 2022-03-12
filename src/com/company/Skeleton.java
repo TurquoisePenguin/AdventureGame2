@@ -14,20 +14,17 @@ public class Skeleton implements EnemyClass{
     double defense=1;
     double resistance=1;
     double speed=3;
+    double experience = 10;
     int turnTime=1;
     String name = "Skeleton";
     private ArrayList<BasicActions> actions = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
 
-    //remove <amount> of HP, returns 1 if still alive, 0 if dead
-    public int removeHP(double amount) {   //1 = alive, 0 = dead
+    public void removeHP(double amount) {   //1 = alive, 0 = dead
         this.curHP = this.curHP - amount;
-        if (this.curHP <= 0) {
+        if (this.curHP <= 0)
             this.curHP = 0;
-            return 0;       //dead
-        }
-        else
-            return 1;       //alive
     }
+    public double getExp() { return this.experience; }
 
     public int getLevel(){
         return level;

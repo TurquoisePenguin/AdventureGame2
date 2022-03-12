@@ -17,6 +17,7 @@ public class PlayerCharacter implements Character{
     private double speed=100;
     private int turnTime=1;
     private int level=1;
+    private double experience=0;
     private ArrayList<BasicActions> actions = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
     private ArrayList<BasicActions> skills = new ArrayList<>(List.of(BasicActions.FIREBALL, BasicActions.LIGHTNING));
     private ArrayList<BasicActions> items = new ArrayList<>(); //TODO: fill as needed, create modifiers
@@ -106,15 +107,17 @@ public class PlayerCharacter implements Character{
         return level;
     }
 
-    //remove <amount> of HP, returns 1 if still alive, 0 if dead
-    public int removeHP(double amount) {   //1 = alive, 0 = dead
-        this.curHP = this.curHP - amount;
-        if (this.curHP <= 0) {
+    public void removeHP(double amount) {   //1 = alive, 0 = dead
+        this.curHP -= amount;
+        if (this.curHP <= 0)
             this.curHP = 0;
-            return 0;       //dead
-        }
-        else
-            return 1;       //alive
+    }
+    public double getExp() { return this.experience; }
+
+    public void addExp(double amount){
+        this.experience += amount;
+        System.out.println("You gain " + (int) amount + " exp.");
+        //TODO: Check levelup
     }
 
     public int getTurnTime() {
@@ -149,13 +152,13 @@ public class PlayerCharacter implements Character{
     }
 
     //will perform the selected action on selected target
-    public void performAction(BasicActions action, Character[] target)
+    public void performAction(BasicActions action, ArrayList<Character> target)
     {
         switch(action) {
             case ATTACK:
                 //get target
-                target[0].removeHP(action.BP);
-                System.out.println(target[0].getName() + " curHP: " + target[0].getCurHP());
+                target.get(0).removeHP(action.BP);
+                System.out.println(target.get(0).getName() + " curHP: " + target.get(0).getCurHP());
                 break;
             case SPECIAL:
 

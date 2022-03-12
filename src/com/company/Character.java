@@ -19,10 +19,13 @@ public interface Character extends Comparable<Character>{
     public ArrayList<BasicActions> getActions();
 
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
-    public int removeHP(double amount);
+    public void removeHP(double amount);
+    public double getExp();
 
     //returns an int based on speed, higher number goes first
     public int getTurnTime();
+
+
 
     //will perform the selected action
     public void performAction(BasicActions action);
