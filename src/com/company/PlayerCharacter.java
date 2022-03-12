@@ -17,8 +17,7 @@ public class PlayerCharacter implements Character{
     private double speed=100;
     private int turnTime=1;
     private int level=1;
-    private BasicActions[] actions = {BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN};
-    private ArrayList<BasicActions> actionsEnum = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
+    private ArrayList<BasicActions> actions = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
     private ArrayList<BasicActions> skills = new ArrayList<>(List.of(BasicActions.FIREBALL, BasicActions.LIGHTNING));
     private ArrayList<BasicActions> items = new ArrayList<>(); //TODO: fill as needed, create modifiers
 
@@ -106,13 +105,14 @@ public class PlayerCharacter implements Character{
     public int getLevel() {
         return level;
     }
-    public BasicActions[] getActions() {return actions;}
 
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public int removeHP(double amount) {   //1 = alive, 0 = dead
-        curHP = curHP - amount;
-        if (curHP <= 0)
+        this.curHP = this.curHP - amount;
+        if (this.curHP <= 0) {
+            this.curHP = 0;
             return 0;       //dead
+        }
         else
             return 1;       //alive
     }
@@ -126,7 +126,7 @@ public class PlayerCharacter implements Character{
         return turnTime;
     }
 
-    public ArrayList<BasicActions> getActionsEnum() {return actionsEnum;}
+    public ArrayList<BasicActions> getActions() {return actions;}
     public ArrayList<BasicActions> getItems() {return items;}
 
     //TODO: Do I need this or Skill[]?

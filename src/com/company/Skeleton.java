@@ -16,13 +16,15 @@ public class Skeleton implements EnemyClass{
     double speed=3;
     int turnTime=1;
     String name = "Skeleton";
-    BasicActions[] actions = {BasicActions.ATTACK};
+    private ArrayList<BasicActions> actions = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
 
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public int removeHP(double amount) {   //1 = alive, 0 = dead
-        curHP = curHP - amount;
-        if (curHP <= 0)
+        this.curHP = this.curHP - amount;
+        if (this.curHP <= 0) {
+            this.curHP = 0;
             return 0;       //dead
+        }
         else
             return 1;       //alive
     }
@@ -55,7 +57,7 @@ public class Skeleton implements EnemyClass{
     }
     public double getDefense() { return this.defense; }
     public double getSpeed() { return speed; }
-    public BasicActions[] getActions() {
+    public ArrayList<BasicActions> getActions() {
         return actions;
     }
 

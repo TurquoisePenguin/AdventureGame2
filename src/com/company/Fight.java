@@ -31,7 +31,7 @@ public class Fight {
             boolean actionSelected = false;
             do {
                 //choose action
-                playerAction = selectAction(mainCharacter.getActionsEnum());
+                playerAction = selectAction(mainCharacter.getActions());
                 System.out.println(playerAction);   //TODO: for debugging
 
                 //if selected action has a secondary menu, open it

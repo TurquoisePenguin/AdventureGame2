@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
 
@@ -15,7 +16,7 @@ public interface Character extends Comparable<Character>{
     double getDefense();
     double getSpeed();
     String getName();
-    public BasicActions[] getActions();
+    public ArrayList<BasicActions> getActions();
 
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public int removeHP(double amount);
