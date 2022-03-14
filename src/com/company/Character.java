@@ -21,6 +21,7 @@ public interface Character extends Comparable<Character>{
     //remove <amount> of HP, returns 1 if still alive, 0 if dead
     public void removeHP(double amount);
     public double getExp();
+    public boolean isDead();
 
     //returns an int based on speed, higher number goes first
     public int getTurnTime();

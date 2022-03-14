@@ -10,6 +10,7 @@ public class Fight {
     public Fight(PlayerCharacter mainCharacter, ArrayList<Character> enemies) {
         this.mainCharacter = mainCharacter;
         this.enemies = enemies;
+        //TODO: You encounter <number> <enemy/enemies>.
         this.fighting();
     }
 
@@ -89,7 +90,7 @@ public class Fight {
 
             int deadCount=0;  //counts the number of dead enemies, if all dead, finish fight
             for (Character enemy : enemies) {
-                if (enemy.getCurHP() == 0)
+                if (enemy.isDead())
                     deadCount++;
             }
             if(deadCount == enemies.size()){  //TODO: Check HP values and finish fight
@@ -108,18 +109,24 @@ public class Fight {
     {
         String enemyNames = "";
         String enemyHPs = "";
-        for (int i=0; i<enemies.size(); i++)    //DONE: Clean up print format
-        {
+        for (int i=0; i<enemies.size(); i++){    //DONE: Clean up print format
             if (enemies.get(i).getCurHP()>0)       //make sure enemy isn't dead    //BROKEN
             {
-                if ((i+1)<enemies.size())   //before the last enemy, tab
-                {
+                if ((i+1)<enemies.size()){   //before the last enemy, tab
                     enemyNames += enemies.get(i).getName() +"\t\t";
-                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + "/ " + enemies.get(i).getMaxHP() + "\t";
-                } else        //no tab
-                {
+                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + " / " + enemies.get(i).getMaxHP() + "\t";
+                } else{        //no tab
                     enemyNames += enemies.get(i).getName();
-                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + "/ " + enemies.get(i).getMaxHP() + "\n";
+                    enemyHPs += "HP: " + enemies.get(i).getCurHP() + " / " + enemies.get(i).getMaxHP() + "\n";
+                }
+            }
+            else {
+                if ((i+1)<enemies.size()){   //before the last enemy, tab
+                    enemyNames += enemies.get(i).getName() + "\t\t";
+                    enemyHPs += "HP: DEAD\t\t";
+                } else{        //no tab
+                    enemyNames += enemies.get(i).getName();
+                    enemyHPs += "HP: DEAD\n";
                 }
             }
         }
@@ -195,13 +202,17 @@ public class Fight {
                 while (!selected){
                     System.out.println("Who would you like to " + action + "?");
                     choice = scan.nextLine();
+                    boolean deadSelect=false;
                     if (isInteger(choice)){  //if choice is an integer
                         int intChoice = Integer.parseInt(choice);   //convert choice to int
                         if (intChoice>0 && intChoice<=enemies.size())   //choice is between 1 and # of choices eg 1-4
                         {
-                            ArrayList<Character> returnTarget = new ArrayList<>();
-                            returnTarget.add(enemies.get(intChoice-1));
-                            return returnTarget;
+                            if (enemies.get(intChoice-1).isDead())
+                                deadSelect = true;
+                            else {
+                                target = intChoice-1;
+                                selected = true;
+                            }
                         }
                     }
                     else{
@@ -209,14 +220,21 @@ public class Fight {
                         for (Character enemy : enemies){
                             target++;
                             if (choice.equalsIgnoreCase(enemy.getName())){
-                                selected = true;
-                                break;
+                                if (enemies.get(target).isDead())
+                                    deadSelect = true;
+                                else {
+                                    selected = true;
+                                    break;
+                                }
                             }
                         }
                     }
                     if (!selected){
                         Fight.printEnemies(enemies);
-                        System.out.println("Please make an appropriate choice.");
+                        if (deadSelect)
+                            System.out.println("Your target is dead. Please select another target.");
+                        else
+                            System.out.println("Please make an appropriate choice.");
                     }
                 }
                 break;
@@ -265,7 +283,7 @@ public class Fight {
     //Method to select target of skills/attacks.
     //Returns in of array of targets
     //TODO: unfinished
-    private int selectTarget(ArrayList<Character> enemies)
+    /*private int selectTarget(ArrayList<Character> enemies)
     {
         Scanner scan = new Scanner(System.in);
         String choice = ""; //temp choice variable
@@ -290,7 +308,7 @@ public class Fight {
 
         }
         return 1;   //error
-    }
+    }*/
 
     //returns number of living/active enemies
     private static int getActiveEnemies(ArrayList<EnemyClass> enemies)

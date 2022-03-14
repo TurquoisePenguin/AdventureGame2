@@ -13,7 +13,7 @@ public class Skeleton implements EnemyClass{
     double intelligence=1;
     double defense=1;
     double resistance=1;
-    double speed=3;
+    double speed=100;
     double experience = 10;
     int turnTime=1;
     String name = "Skeleton";

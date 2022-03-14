@@ -106,6 +106,9 @@ public class PlayerCharacter implements Character{
     public int getLevel() {
         return level;
     }
+    public boolean isDead(){
+        return (curHP==0);
+    }
 
     public void removeHP(double amount) {   //1 = alive, 0 = dead
         this.curHP -= amount;

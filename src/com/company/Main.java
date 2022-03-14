@@ -45,7 +45,7 @@ public class Main {
                 if(checkRandomEncounter()) {
 
                     ArrayList<Character> skeleton = new ArrayList<Character>();//1-3 skeletons
-                    for (int i=0; i<rand.nextInt(3)+1; i++){
+                    for (int i=0; i<rand.nextInt(1)+2; i++){
                         skeleton.add(new Skeleton("Skeleton" + (i+1)));
                     }
                     Fight random = new Fight(mainCharacter, skeleton);
