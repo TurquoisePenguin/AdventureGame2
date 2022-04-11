@@ -17,6 +17,15 @@ public class Main {
         Random rand = new Random();
 
 
+        HashMap<String, Boolean> introDesc = new HashMap<>();
+        introDesc.put("You wake up on the ground feeling cold. You feel leaves and dirt underneath your wing.", true);
+        ArrayList<String> introActions = new ArrayList<>();
+        introActions.add("North");
+        HashMap<String, Boolean> introFlags = new HashMap<>();
+        introFlags.put("End", false);
+
+        Room intro = new Room(introDesc, introActions, introFlags);
+        intro.getDescription();
         //Print intro
         System.out.println("You wake up on the ground feeling cold. You feel leaves and dirt underneath your wing.");
         System.out.println("Wing? ... You look where your hands should be and see black and white flipper-like wings.");
@@ -44,7 +53,7 @@ public class Main {
             case "n":
                 if(checkRandomEncounter()) {
 
-                    ArrayList<Character> skeleton = new ArrayList<Character>();//1-3 skeletons
+                    ArrayList<Character> skeleton = new ArrayList<>();//1-3 skeletons
                     for (int i=0; i<rand.nextInt(1)+2; i++){
                         skeleton.add(new Skeleton("Skeleton" + (i+1)));
                     }
