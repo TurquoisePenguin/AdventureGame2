@@ -47,7 +47,7 @@ public class Fight {
             //get target
             //create list of possible targets. Attack: Enemy1, Enemy2, etc. Item: Self, Party, any 1 enemy? Run: skip
             target = getTarget(playerAction, enemies);
-            System.out.println(target.get(0).getName());  //TODO: for debugging, assumes enemy target
+            System.out.println("Target = " + target.get(0).getName());  //TODO: for debugging, assumes enemy target
 
 
 
@@ -148,6 +148,7 @@ public class Fight {
     //When user makes appropriate choice, returns string of action chosen
     //TODO: Use enums and try-check
     private BasicActions selectAction(ArrayList<BasicActions> actions){
+        //TODO: Implement MP costs
         Scanner scan = new Scanner(System.in);
         boolean selected = false;
         String choice = "";
@@ -210,7 +211,7 @@ public class Fight {
                 //loop to take selection
                 //TODO: Important. Check for HP and exclude dead choices
                 while (!selected){
-                    System.out.print("Who would you like to " + action + "?");
+                    System.out.print("Who would you like to " + action + "? ");
                     choice = scan.nextLine();
                     boolean deadSelect=false;
                     if (isInteger(choice)){  //if choice is an integer
@@ -270,7 +271,7 @@ public class Fight {
                 break;
         }
         ArrayList<Character> returnTarget = new ArrayList<>();
-        if (target > 0)
+        if (target >= 0)
             returnTarget.add(enemies.get(target));
         else returnTarget.add(mainCharacter);
         return returnTarget;

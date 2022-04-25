@@ -116,6 +116,12 @@ public class PlayerCharacter implements Character{
         if (this.curHP <= 0)
             this.curHP = 0;
     }
+
+    public void removeMP(double amount) {
+        this.curMP -= amount;
+        if (this.curMP <= 0)
+            this.curMP = 0;
+    }
     public double getExp() { return this.experience; }
 
     public void addExp(double amount){
@@ -163,21 +169,20 @@ public class PlayerCharacter implements Character{
             case ATTACK:
                 //get target
                 target.get(0).removeHP(action.BP);
-                System.out.println(target.get(0).getName() + " curHP: " + target.get(0).getCurHP());
+                System.out.println("You deal " + action.BP + " damage to " + target.get(0).getName() + ".");
                 break;
-            case SPECIAL:
-                //TODO: Fight passes the name of the skill, need to fix
+            case FIREBALL:
+            case LIGHTNING:
                 //iterate through targets
+                this.removeMP(action.MPcost);
                 for (Character enemy : target){
-                    System.out.println(enemy.getName() + " " + enemy.isDead());
                     if (!enemy.isDead()){
-                        System.out.println(enemy.getName() + "Got here");
+                        System.out.println("You deal " + action.BP + " damage to " + enemy + ".");
                         enemy.removeHP(action.BP);  //TODO: Create damage formula
                     }
                 }
                 break;
             case RUN:
-                //TODO: Cannot pass status of fight by reference
                 if (rand.nextBoolean()){    //TODO: Implement odds
                     System.out.println(this.getName() + " ran away.");
                     return FightStatus.RUN;

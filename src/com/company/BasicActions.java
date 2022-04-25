@@ -1,13 +1,13 @@
 package com.company;
 
 public enum BasicActions {
-    ATTACK("single enemy", 1, 0),
+    ATTACK("single enemy", 1, 0, 0),
     SPECIAL("menu"),
     ITEM("menu"),
     RUN("skip"),
 
-    FIREBALL("single enemy", 10, 0),
-    LIGHTNING("all enemies", 15, 0);
+    FIREBALL("single enemy", 10, 1, 0),
+    LIGHTNING("all enemies", 15, 3, 0);
 
     //TODO: Unsure about keeping this.
     //Options: "single enemy", "all enemies", "menu", "self", "single PC", "full party", "skip"
@@ -20,9 +20,11 @@ public enum BasicActions {
     //for skills
     double BP;
     double effectChance;
-    BasicActions (String targets, double BP, double effectChance){
+    double MPcost;
+    BasicActions (String targets, double BP, double MPcost, double effectChance){
         this.targets = targets;
         this.BP = BP;
+        this.MPcost = MPcost;
         this.effectChance = effectChance;
     }
 
