@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
 
 public class PlayerCharacter implements Character{
     //stats?
@@ -155,8 +156,9 @@ public class PlayerCharacter implements Character{
     }
 
     //will perform the selected action on selected target
-    public void performAction(BasicActions action, ArrayList<Character> target)
+    public FightStatus performAction(BasicActions action, ArrayList<Character> target)
     {
+        Random rand = new Random();
         switch(action) {
             case ATTACK:
                 //get target
@@ -164,21 +166,40 @@ public class PlayerCharacter implements Character{
                 System.out.println(target.get(0).getName() + " curHP: " + target.get(0).getCurHP());
                 break;
             case SPECIAL:
-
+                //TODO: Fight passes the name of the skill, need to fix
+                //iterate through targets
+                for (Character enemy : target){
+                    System.out.println(enemy.getName() + " " + enemy.isDead());
+                    if (!enemy.isDead()){
+                        System.out.println(enemy.getName() + "Got here");
+                        enemy.removeHP(action.BP);  //TODO: Create damage formula
+                    }
+                }
                 break;
+            case RUN:
+                //TODO: Cannot pass status of fight by reference
+                if (rand.nextBoolean()){    //TODO: Implement odds
+                    System.out.println(this.getName() + " ran away.");
+                    return FightStatus.RUN;
+                }
+                else
+                    System.out.println(this.getName() + " failed to run away.");
         }
         System.out.println(this.getName() + " action: " + action);
+        return FightStatus.ACTIVE;
     }
 
     //for actions with no specified target. Maybe Run
-    public void performAction(BasicActions action){
+    public FightStatus performAction(BasicActions action){
         //TODO
+        return FightStatus.ACTIVE;
     }
 
     //if no arg is supplied, selects a random action
-    public void performAction()
+    public FightStatus performAction( )
     {
         System.out.println(this.getName() + " performAction()");
+        return FightStatus.ACTIVE;
     }
 
     public void setTurnTime(int turnTime) {

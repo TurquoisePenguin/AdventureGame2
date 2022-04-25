@@ -6,11 +6,17 @@ public class Fight {
     PlayerCharacter mainCharacter;  //taken through constructor //Player Character that is fighting
     ArrayList<Character> enemies;   //taken through constructor, expected to change as needed   //enemy or enemies that are fighting PC
     //static String[] mainActions = {"Attack", "Skills", "Item", "Run"}; //First level options for fighting, may change as needed?  //TODO:Deprecated
+    FightStatus status;
 
     public Fight(PlayerCharacter mainCharacter, ArrayList<Character> enemies) {
         this.mainCharacter = mainCharacter;
         this.enemies = enemies;
+        this.status = FightStatus.ACTIVE;
+
         //TODO: You encounter <number> <enemy/enemies>.
+        for (Character enemy : enemies) {
+            System.out.println("You encounter " + enemy.getName() + ".");
+        }
         this.fighting();
     }
 
@@ -76,15 +82,16 @@ public class Fight {
 
             //perform actions in order
             for (Character actor:turnOrder) {
-                //TODO: Do I check if dead here or inside class?
-                if (actor instanceof PlayerCharacter) {
-                    if (mainCharacter.getCurHP() > 0)   //dead check
-                        mainCharacter.performAction(playerAction, target);
-
-                }
-                else{
-                    if (actor.getCurHP() > 0)   //dead check
-                        actor.performAction();
+                if (status == FightStatus.ACTIVE) {
+                    //DONE: Do I check if dead here or inside class?
+                    if (actor instanceof PlayerCharacter) {
+                        if (mainCharacter.getCurHP() > 0)   //dead check
+                            status = mainCharacter.performAction(playerAction, target);
+                    }
+                    else {
+                        if (actor.getCurHP() > 0)   //dead check
+                            actor.performAction();
+                    }
                 }
             }
 
@@ -93,7 +100,10 @@ public class Fight {
                 if (enemy.isDead())
                     deadCount++;
             }
-            if(deadCount == enemies.size()){  //TODO: Check HP values and finish fight
+            if (status == FightStatus.RUN){
+                fighting=false;
+            }
+            else if(deadCount == enemies.size()){  //TODO: Check HP values and finish fight
                 //TODO: Distribute exp
                 for (Character enemy : enemies) {
                     mainCharacter.addExp(enemy.getExp());
@@ -200,7 +210,7 @@ public class Fight {
                 //loop to take selection
                 //TODO: Important. Check for HP and exclude dead choices
                 while (!selected){
-                    System.out.println("Who would you like to " + action + "?");
+                    System.out.print("Who would you like to " + action + "?");
                     choice = scan.nextLine();
                     boolean deadSelect=false;
                     if (isInteger(choice)){  //if choice is an integer
@@ -260,7 +270,9 @@ public class Fight {
                 break;
         }
         ArrayList<Character> returnTarget = new ArrayList<>();
-        returnTarget.add(enemies.get(target));
+        if (target > 0)
+            returnTarget.add(enemies.get(target));
+        else returnTarget.add(mainCharacter);
         return returnTarget;
     }
 
@@ -322,6 +334,10 @@ public class Fight {
             }
         }
         return count;
+    }
+
+    public void setStatus(FightStatus status) {
+        this.status = status;
     }
 
     //Method to verify if string is integer

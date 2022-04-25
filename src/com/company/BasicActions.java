@@ -7,7 +7,7 @@ public enum BasicActions {
     RUN("skip"),
 
     FIREBALL("single enemy", 10, 0),
-    LIGHTNING("single enemy", 15, 0);
+    LIGHTNING("all enemies", 15, 0);
 
     //TODO: Unsure about keeping this.
     //Options: "single enemy", "all enemies", "menu", "self", "single PC", "full party", "skip"
