@@ -179,6 +179,7 @@ public class PlayerCharacter implements Character{
                     if (!enemy.isDead()){
                         System.out.println("You deal " + action.BP + " damage to " + enemy + ".");
                         enemy.removeHP(action.BP);  //TODO: Create damage formula
+
                     }
                 }
                 break;

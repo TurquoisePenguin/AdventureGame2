@@ -17,22 +17,17 @@ public class Main {
         Random rand = new Random();
 
 
-        HashMap<String, Boolean> introDesc = new HashMap<>();
+        LinkedHashMap<String, Boolean> introDesc = new LinkedHashMap<>();
         introDesc.put("You wake up on the ground feeling cold. You feel leaves and dirt underneath your wing.", true);
         ArrayList<String> introActions = new ArrayList<>();
         introActions.add("North");
         HashMap<String, Boolean> introFlags = new HashMap<>();
         introFlags.put("End", false);
 
-        Room intro = new Room(introDesc, introActions, introFlags);
+        //Room intro = new Room("intro", introDesc, introActions, introFlags);
+        Room intro = new Room("src/com/company/rooms/intro.txt");
         intro.getDescription();
         //Print intro
-        System.out.println("You wake up on the ground feeling cold. You feel leaves and dirt underneath your wing.");
-        System.out.println("Wing? ... You look where your hands should be and see black and white flipper-like wings.");
-        System.out.println("You are a penguin.");
-        System.out.println("You struggle to lift yourself up and see yourself surrounded by tall trees and lots of grass.");
-        System.out.println("You are a penguin in a forest.");
-        System.out.println("What is your name?");
         //TODO: Condense this
         String mainName = scan.nextLine();
         PlayerCharacter mainCharacter = new PlayerCharacter(mainName);

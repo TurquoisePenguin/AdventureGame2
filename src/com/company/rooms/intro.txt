@@ -1,0 +1,13 @@
+{Name}
+Template
+{x}
+0
+{y}
+0
+{Description}
+You wake up on the ground feeling cold. You feel leaves and dirt underneath your wing.{true}
+Wing? ... You look where your hands should be and see black and white flipper-like wings.{true}
+You are a penguin.{true}
+You struggle to lift yourself up and see yourself surrounded by tall trees and lots of grass.{true}
+You are a penguin in a forest.{true}
+What is your name?{true}
