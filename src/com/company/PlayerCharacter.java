@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Random;
 
 public class PlayerCharacter implements Character{
     //stats?
@@ -115,6 +116,12 @@ public class PlayerCharacter implements Character{
         if (this.curHP <= 0)
             this.curHP = 0;
     }
+
+    public void removeMP(double amount) {
+        this.curMP -= amount;
+        if (this.curMP <= 0)
+            this.curMP = 0;
+    }
     public double getExp() { return this.experience; }
 
     public void addExp(double amount){
@@ -155,30 +162,50 @@ public class PlayerCharacter implements Character{
     }
 
     //will perform the selected action on selected target
-    public void performAction(BasicActions action, ArrayList<Character> target)
+    public FightStatus performAction(BasicActions action, ArrayList<Character> target)
     {
+        Random rand = new Random();
         switch(action) {
             case ATTACK:
                 //get target
                 target.get(0).removeHP(action.BP);
-                System.out.println(target.get(0).getName() + " curHP: " + target.get(0).getCurHP());
+                System.out.println("You deal " + action.BP + " damage to " + target.get(0).getName() + ".");
                 break;
-            case SPECIAL:
+            case FIREBALL:
+            case LIGHTNING:
+                //iterate through targets
+                this.removeMP(action.MPcost);
+                for (Character enemy : target){
+                    if (!enemy.isDead()){
+                        System.out.println("You deal " + action.BP + " damage to " + enemy + ".");
+                        enemy.removeHP(action.BP);  //TODO: Create damage formula
 
+                    }
+                }
                 break;
+            case RUN:
+                if (rand.nextBoolean()){    //TODO: Implement odds
+                    System.out.println(this.getName() + " ran away.");
+                    return FightStatus.RUN;
+                }
+                else
+                    System.out.println(this.getName() + " failed to run away.");
         }
         System.out.println(this.getName() + " action: " + action);
+        return FightStatus.ACTIVE;
     }
 
     //for actions with no specified target. Maybe Run
-    public void performAction(BasicActions action){
+    public FightStatus performAction(BasicActions action){
         //TODO
+        return FightStatus.ACTIVE;
     }
 
     //if no arg is supplied, selects a random action
-    public void performAction()
+    public FightStatus performAction( )
     {
         System.out.println(this.getName() + " performAction()");
+        return FightStatus.ACTIVE;
     }
 
     public void setTurnTime(int turnTime) {

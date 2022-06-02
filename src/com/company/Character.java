@@ -29,10 +29,10 @@ public interface Character extends Comparable<Character>{
 
 
     //will perform the selected action
-    public void performAction(BasicActions action);
+    public FightStatus performAction(BasicActions action, ArrayList<Character> target);
 
     //if no arg is supplied, selects a random action
-    public void performAction();
+    public FightStatus performAction();
 
 
     public String toString();

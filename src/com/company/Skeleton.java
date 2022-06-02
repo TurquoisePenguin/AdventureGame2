@@ -19,6 +19,13 @@ public class Skeleton implements EnemyClass{
     String name = "Skeleton";
     private ArrayList<BasicActions> actions = new ArrayList<>(List.of(BasicActions.ATTACK, BasicActions.SPECIAL, BasicActions.ITEM, BasicActions.RUN));
 
+    //constructor
+    public Skeleton() {}
+
+    public Skeleton(String name) {
+        this.name = name;
+    }
+
     public void removeHP(double amount) {   //1 = alive, 0 = dead
         this.curHP = this.curHP - amount;
         if (this.curHP <= 0)
@@ -69,17 +76,17 @@ public class Skeleton implements EnemyClass{
     }
 
     //will perform the selected action
-    @Override
-    public void performAction(BasicActions action)
+    public FightStatus performAction(BasicActions action, ArrayList<Character> target)
     {
         System.out.println(this.getName() + " action: " + action.toString());
+        return FightStatus.ACTIVE;
     }
 
     //if no arg is supplied, selects a random action
-    @Override
-    public void performAction()
+    public FightStatus performAction()
     {
         System.out.println(this.getName() + " performAction()");
+        return FightStatus.ACTIVE;
     }
 
 
@@ -100,15 +107,6 @@ public class Skeleton implements EnemyClass{
         this.turnTime = (int) (Math.random() * range + this.getSpeed());
         //System.out.println(this.getName() + " Turn time: " + this.turnTime);  //debugging
         return turnTime;
-    }
-
-
-    //constructor
-    public Skeleton() {
-    }
-
-    public Skeleton(String name) {
-        this.name = name;
     }
 
     //comparable

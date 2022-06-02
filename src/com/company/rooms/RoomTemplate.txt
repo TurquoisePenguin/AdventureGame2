@@ -1,0 +1,12 @@
+{Name}
+Template
+{x}
+0
+{y}
+0
+{Description}
+This is how you create a room. {true}
+Each line ends with true or false in curly brackets to indicate if they are displayed. {true}
+For example, this line should not display on first load. {false}
+Actions are verbs the user can perform. {true}
+Flags are indicators for events in each room. {true}
