@@ -3,7 +3,7 @@ import java.util.Locale;
 import java.util.*;
 //rand.nextInt(max - min) + min;
 //TODO: "Documentation"
-//TODO: GitHub
+//DONE!: GitHub
 //TODO: Idea, each room has set actions. See Dungeonman
 
 
@@ -11,6 +11,7 @@ public class Main {
     //TODO: Ideas: Player can change into different animals with different abilities. Animals include penguin, phoenix, wolf
     static int moveCounter = 0;
     public static void main(String[] args) {
+        GameLoop game = new GameLoop();
         int x,y;    //coordinates of player
         String choice;      //The choice a player makes
         Scanner scan = new Scanner(System.in);
@@ -42,8 +43,7 @@ public class Main {
 
         //Read choice
         choice = scan.nextLine();
-        switch(choice.toLowerCase())
-        {
+        switch(choice.toLowerCase()) {
             case "north":
             case "n":
                 if(checkRandomEncounter()) {
@@ -81,5 +81,6 @@ public static boolean checkRandomEncounter(){
         //return ((rand.nextInt(100)) < encounterRate);
         return true;        //TODO
 }
+
 
 }
